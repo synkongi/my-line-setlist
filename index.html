@@ -1088,7 +1088,6 @@
     nextPageBtn.disabled = currentPageIndex === albumPages.length - 1;
 
     trackListEl.innerHTML = "";
-    
 page.tracks.forEach(track => {
   const li = document.createElement("li");
   const btn = document.createElement("button");
@@ -1103,12 +1102,14 @@ page.tracks.forEach(track => {
   const meta = document.createElement("div");
   meta.className = "track-meta";
 
-  // 곡명
+  // 곡명 영역
   const main = document.createElement("div");
   main.className = "track-text-main";
 
-  // 🔥 TITLE 뱃지 추가
-  if (track.sub && track.sub.includes("[TITLE]")) {
+  // TITLE 뱃지 여부 판단 (sub가 없으면 그냥 false)
+  const hasTitleBadge = (track.sub || "").includes("[TITLE]");
+
+  if (hasTitleBadge) {
     const badge = document.createElement("span");
     badge.textContent = "TITLE";
     badge.style.display = "inline-block";
@@ -1126,10 +1127,11 @@ page.tracks.forEach(track => {
   titleText.textContent = track.title;
   main.appendChild(titleText);
 
-  // 🔥 밑줄(앨범명) – [TITLE] 제거
+  // 밑줄(앨범명) – [TITLE] 제거 + 없는 경우엔 page.title 사용
   const sub = document.createElement("div");
   sub.className = "track-text-sub";
-  sub.textContent = track.sub.replace("[TITLE]", "").trim() || page.title;
+  const rawSub = track.sub || page.title || "";
+  sub.textContent = rawSub.replace("[TITLE]", "").trim();
 
   meta.appendChild(main);
   meta.appendChild(sub);
@@ -1149,9 +1151,6 @@ page.tracks.forEach(track => {
   trackListEl.appendChild(li);
 });
 
-      li.appendChild(btn);
-      trackListEl.appendChild(li);
-    });
 
     const liDirect = document.createElement("li");
     const directBtn = document.createElement("button");
@@ -1224,5 +1223,6 @@ page.tracks.forEach(track => {
 </script>
 </body>
 </html>
+
 
 
