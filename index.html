@@ -1127,17 +1127,22 @@ page.tracks.forEach(track => {
   titleText.textContent = track.title;
   main.appendChild(titleText);
 
-  // 밑줄(앨범명) – [TITLE] 제거 + 없는 경우엔 page.title 사용
-  const sub = document.createElement("div");
-  sub.className = "track-text-sub";
-  let rawSub = track.sub || "";
-rawSub = rawSub.replace("[TITLE]", "").trim();
+ // 밑줄(앨범명) – TITLE 표시 처리
+const sub = document.createElement("div");
+sub.className = "track-text-sub";
 
-// 빈 문자열이면 → 강제로 앨범명 넣기
-if (!rawSub) {
-  rawSub = page.title;
+// 1) 기본은 track.sub를 그대로 가져온다
+let rawSub = track.sub;
+
+// 2) sub가 없거나, 내용이 그냥 "[TITLE]" 하나뿐이면 → 앨범명으로 대체
+if (!rawSub || rawSub.trim() === "[TITLE]") {
+  rawSub = page.title || "";
 }
 
+// 3) 그래도 남아있을 수 있는 [TITLE] 문자열은 지워주고 정리
+rawSub = rawSub.replace("[TITLE]", "").trim();
+
+// 4) 최종 텍스트 반영
 sub.textContent = rawSub;
 
 
@@ -1231,6 +1236,7 @@ sub.textContent = rawSub;
 </script>
 </body>
 </html>
+
 
 
 
