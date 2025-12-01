@@ -90,7 +90,7 @@
       align-items: flex-end;
       font-size: 13px;
     }
-   .producer-input {
+ .producer-input {
   border: none;
   border-bottom: 1px solid rgba(255,255,255,0.8);
   background: transparent;
@@ -101,17 +101,8 @@
   text-align: right;
   outline: none;
 
-  /* 여기부터 효과 추가 */
-  text-shadow:
-    0 0 4px rgba(0, 0, 0, 0.45),
-    0 0 1px rgba(0, 0, 0, 0.8);
-}
-
-    @media (max-width: 640px) {
-  .producer-input {
-    /* 모바일에서는 훨씬 약하게 */
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
-  }
+  /* PC · 모바일 공통: 얇은 그림자 */
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
 }
 
     .producer-input::placeholder { color: rgba(255,255,255,0.6); }
@@ -1249,6 +1240,7 @@ sub.textContent = rawSub;
 </script>
 </body>
 </html>
+
 
 
 
