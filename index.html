@@ -397,482 +397,480 @@
 <script>
   const isTouch = ("ontouchstart" in window) || (navigator.maxTouchPoints > 0);
 
-  // ★ 여기부터 앨범/곡 데이터
-  const albumPages = [
-    // 1. Black Mamba
-    {
-      id: "black-mamba",
-      title: "Black Mamba",
-      sub: "Single Album",
-      cover: "black-mamba.jpg",
-      tracks: [
-        { id: "black-mamba-track", title: "Black Mamba" }
-      ]
-    },
+ const albumPages = [
+  // 1. Black Mamba
+  {
+    id: 'black-mamba',
+    title: 'Black Mamba',
+    sub: 'Single Album',
+    cover: 'black-mamba.jpg',
+    tracks: [
+      { id: 'black-mamba-track', title: 'Black Mamba' }
+    ]
+  },
 
-    // 2. Next Level
-    {
-      id: "next-level",
-      title: "Next Level",
-      sub: "Single Album",
-      cover: "next-level.jpg",
-      tracks: [
-        { id: "next-level-track", title: "Next Level" }
-      ]
-    },
+  // 2. Next Level
+  {
+    id: 'next-level',
+    title: 'Next Level',
+    sub: 'Single Album',
+    cover: 'next-level.jpg',
+    tracks: [
+      { id: 'next-level-track', title: 'Next Level' }
+    ]
+  },
 
-    // 3. Savage - The 1st Mini Album
-    {
-      id: "savage",
-      title: "Savage - The 1st Mini Album",
-      sub: "EP",
-      cover: "savage.jpg",
-      tracks: [
-        { id: "aenergy", title: "aenergy" },
-        { id: "savage-title", title: "Savage", sub: "[TITLE]" },
-        { id: "ill-make-you-cry", title: "I’ll Make You Cry" },
-        { id: "yeppi-yeppi", title: "YEPPI YEPPI" },
-        { id: "iconic", title: "ICONIC" },
-        { id: "lucid-dream", title: "자각몽 (Lucid Dream)" }
-      ]
-    },
+  // 3. Savage - The 1st Mini Album
+  {
+    id: 'savage',
+    title: 'Savage - The 1st Mini Album',
+    sub: 'EP',
+    cover: 'savage.jpg',
+    tracks: [
+      { id: 'aenergy', title: 'aenergy' },
+      { id: 'savage-title', title: 'Savage', sub: '[TITLE]' },
+      { id: 'ill-make-you-cry', title: 'I’ll Make You Cry' },
+      { id: 'yeppi-yeppi', title: 'YEPPI YEPPI' },
+      { id: 'iconic', title: 'ICONIC' },
+      { id: 'lucid-dream', title: '자각몽 (Lucid Dream)' }
+    ]
+  },
 
-    // 4. Girls - The 2nd Mini Album
-    {
-      id: "girls",
-      title: "Girls - The 2nd Mini Album",
-      sub: "EP",
-      cover: "girls.jpg",
-      tracks: [
-        { id: "girls-title", title: "Girls", sub: "[TITLE]" },
-        { id: "illusion", title: "도깨비불 (Illusion)" },
-        { id: "lingo", title: "Lingo" },
-        { id: "lts-kor", title: "Life′s Too Short" },
-        { id: "icu", title: "ICU (쉬어가도 돼)" },
-        { id: "lts-eng", title: "Life′s Too Short (English Ver.)" },
-        { id: "forever", title: "Forever (약속)" },
-        { id: "dreams-come-true", title: "Dreams Come True" }
-      ]
-    },
+  // 4. Girls - The 2nd Mini Album
+  {
+    id: 'girls',
+    title: 'Girls - The 2nd Mini Album',
+    sub: 'EP',
+    cover: 'girls.jpg',
+    tracks: [
+      { id: 'girls-title', title: 'Girls', sub: '[TITLE]' },
+      { id: 'illusion', title: '도깨비불 (Illusion)' },
+      { id: 'lingo', title: 'Lingo' },
+      { id: 'lts-kor', title: 'Life′s Too Short' },
+      { id: 'icu', title: 'ICU (쉬어가도 돼)' },
+      { id: 'lts-eng', title: 'Life′s Too Short (English Ver.)' },
+      { id: 'forever', title: 'Forever (약속)' },
+      { id: 'dreams-come-true', title: 'Dreams Come True' }
+    ]
+  },
 
-    // 5. MY WORLD - The 3rd Mini Album
-    {
-      id: "my-world",
-      title: "MY WORLD - The 3rd Mini Album",
-      sub: "EP",
-      cover: "my-world.jpg",
-      tracks: [
-        { id: "welcome", title: "Welcome To MY World (Feat. nævis)" },
-        { id: "spicy-title", title: "Spicy", sub: "[TITLE]" },
-        { id: "salty-sweet", title: "Salty & Sweet" },
-        { id: "thirsty", title: "Thirsty" },
-        { id: "im-unhappy", title: "I'm Unhappy" },
-        { id: "til-we-meet-again", title: "'Til We Meet Again" }
-      ]
-    },
+  // 5. MY WORLD - The 3rd Mini Album
+  {
+    id: 'my-world',
+    title: 'MY WORLD - The 3rd Mini Album',
+    sub: 'EP',
+    cover: 'my-world.jpg',
+    tracks: [
+      { id: 'welcome', title: 'Welcome To MY World (Feat. nævis)' },
+      { id: 'spicy-title', title: 'Spicy', sub: '[TITLE]' },
+      { id: 'salty-sweet', title: 'Salty & Sweet' },
+      { id: 'thirsty', title: 'Thirsty' },
+      { id: 'im-unhappy', title: 'I\'m Unhappy' },
+      { id: 'til-we-meet-again', title: '\'Til We Meet Again' }
+    ]
+  },
 
-    // 6. Better Things
-    {
-      id: "better-things",
-      title: "Better Things",
-      sub: "Single Album",
-      cover: "better-things.jpg",
-      tracks: [
-        { id: "better-things-title", title: "Better Things", sub: "[TITLE]" },
-        { id: "better-things-sped", title: "Better Things (Sped Up Ver.)" },
-        { id: "better-things-slowed", title: "Better Things (Slowed Down Ver.)" },
-        { id: "better-things-snack", title: "Better Things (Snack Ver.)" }
-      ]
-    },
+  // 6. Better Things
+  {
+    id: 'better-things',
+    title: 'Better Things',
+    sub: 'Single Album',
+    cover: 'better-things.jpg',
+    tracks: [
+      { id: 'better-things-title', title: 'Better Things', sub: '[TITLE]' },
+      { id: 'better-things-sped', title: 'Better Things (Sped Up Ver.)' },
+      { id: 'better-things-slowed', title: 'Better Things (Slowed Down Ver.)' },
+      { id: 'better-things-snack', title: 'Better Things (Snack Ver.)' }
+    ]
+  },
 
-    // 7. Drama - The 4th Mini Album
-    {
-      id: "drama",
-      title: "Drama - The 4th Mini Album",
-      sub: "EP",
-      cover: "drama.jpg",
-      tracks: [
-        { id: "drama-title", title: "Drama", sub: "[TITLE]" },
-        { id: "trick-or-trick", title: "Trick or Trick" },
-        { id: "dont-blink", title: "Don't Blink" },
-        { id: "hot-air-balloon", title: "Hot Air Balloon" },
-        { id: "yolo", title: "YOLO" },
-        { id: "you", title: "You" },
-        { id: "drama-sped", title: "Drama (Sped Up Ver.)" }
-      ]
-    },
+  // 7. Drama - The 4th Mini Album
+  {
+    id: 'drama',
+    title: 'Drama - The 4th Mini Album',
+    sub: 'EP',
+    cover: 'drama.jpg',
+    tracks: [
+      { id: 'drama-title', title: 'Drama', sub: '[TITLE]' },
+      { id: 'trick-or-trick', title: 'Trick or Trick' },
+      { id: 'dont-blink', title: 'Don\'t Blink' },
+      { id: 'hot-air-balloon', title: 'Hot Air Balloon' },
+      { id: 'yolo', title: 'YOLO' },
+      { id: 'you', title: 'You' },
+      { id: 'drama-sped', title: 'Drama (Sped Up Ver.)' }
+    ]
+  },
 
-    // 8. Jingle Bell Rock
-    {
-      id: "jingle-bell-rock",
-      title: "Jingle Bell Rock",
-      sub: "Single Album",
-      cover: "jingle-bell-rock.jpg",
-      tracks: [
-        { id: "jbr-title", title: "Jingle Bell Rock", sub: "[TITLE]" },
-        { id: "jbr-sped", title: "Jingle Bell Rock (Sped Up Ver.)" }
-      ]
-    },
+  // 8. Jingle Bell Rock
+  {
+    id: 'jingle-bell-rock',
+    title: 'Jingle Bell Rock',
+    sub: 'Single Album',
+    cover: 'jingle-bell-rock.jpg',
+    tracks: [
+      { id: 'jbr-title', title: 'Jingle Bell Rock', sub: '[TITLE]' },
+      { id: 'jbr-sped', title: 'Jingle Bell Rock (Sped Up Ver.)' }
+    ]
+  },
 
-    // 9. Armageddon - The 1st Album
-    {
-      id: "armageddon",
-      title: "Armageddon - The 1st Album",
-      sub: "Full Album",
-      cover: "armageddon.jpg",
-      tracks: [
-        { id: "supernova-title", title: "Supernova", sub: "[TITLE]" },
-        { id: "armageddon-title", title: "Armageddon", sub: "[TITLE]" },
-        { id: "set-the-tone", title: "Set The Tone" },
-        { id: "mine", title: "Mine" },
-        { id: "licorice", title: "Licorice" },
-        { id: "bahama", title: "BAHAMA" },
-        { id: "long-chat", title: "Long Chat (#♥)" },
-        { id: "prologue", title: "Prologue" },
-        { id: "live-my-life", title: "Live My Life" },
-        { id: "melody", title: "목소리 (Melody)" }
-      ]
-    },
+  // 9. Armageddon - The 1st Album
+  {
+    id: 'armageddon',
+    title: 'Armageddon - The 1st Album',
+    sub: 'Full Album',
+    cover: 'armageddon.jpg',
+    tracks: [
+      { id: 'supernova-title', title: 'Supernova', sub: '[TITLE]' },
+      { id: 'armageddon-title', title: 'Armageddon', sub: '[TITLE]' },
+      { id: 'set-the-tone', title: 'Set The Tone' },
+      { id: 'mine', title: 'Mine' },
+      { id: 'licorice', title: 'Licorice' },
+      { id: 'bahama', title: 'BAHAMA' },
+      { id: 'long-chat', title: 'Long Chat (#♥)' },
+      { id: 'prologue', title: 'Prologue' },
+      { id: 'live-my-life', title: 'Live My Life' },
+      { id: 'melody', title: '목소리 (Melody)' }
+    ]
+  },
 
-    // 10. Hot Mess
-    {
-      id: "hot-mess",
-      title: "Hot Mess",
-      sub: "Single Album",
-      cover: "hot-mess.jpg",
-      tracks: [
-        { id: "hot-mess-title", title: "Hot Mess", sub: "[TITLE]" },
-        { id: "sun-and-moon", title: "Sun and Moon" },
-        { id: "zoom-zoom", title: "ZOOM ZOOM" }
-      ]
-    },
+  // 10. Hot Mess
+  {
+    id: 'hot-mess',
+    title: 'Hot Mess',
+    sub: 'Single Album',
+    cover: 'hot-mess.jpg',
+    tracks: [
+      { id: 'hot-mess-title', title: 'Hot Mess', sub: '[TITLE]' },
+      { id: 'sun-and-moon', title: 'Sun and Moon' },
+      { id: 'zoom-zoom', title: 'ZOOM ZOOM' }
+    ]
+  },
 
-    // 11. SYNK : PARALLEL LINE
-    {
-      id: "parallel-line",
-      title: "SYNK : PARALLEL LINE - Special Digital Single",
-      sub: "Single Album",
-      cover: "parallel-line.jpg",
-      tracks: [
-        { id: "up-karina", title: "UP (KARINA Solo)" },
-        { id: "dopamine-giselle", title: "Dopamine (GISELLE Solo)" },
-        { id: "bored-ningning", title: "Bored! (NINGNING Solo)" },
-        { id: "spark-winter", title: "Spark (WINTER Solo)" }
-      ]
-    },
+  // 11. SYNK : PARALLEL LINE
+  {
+    id: 'parallel-line',
+    title: 'SYNK : PARALLEL LINE - Special Digital Single',
+    sub: 'Single Album',
+    cover: 'parallel-line.jpg',
+    tracks: [
+      { id: 'up-karina', title: 'UP (KARINA Solo)' },
+      { id: 'dopamine-giselle', title: 'Dopamine (GISELLE Solo)' },
+      { id: 'bored-ningning', title: 'Bored! (NINGNING Solo)' },
+      { id: 'spark-winter', title: 'Spark (WINTER Solo)' }
+    ]
+  },
 
-    // 12. Whiplash - The 5th Mini Album
-    {
-      id: "whiplash",
-      title: "Whiplash - The 5th Mini Album",
-      sub: "EP",
-      cover: "whiplash.jpg",
-      tracks: [
-        { id: "whiplash-title", title: "Whiplash", sub: "[TITLE]" },
-        { id: "kill-it", title: "Kill it" },
-        { id: "flights-not-feelings", title: "Flights, Not Feelings" },
-        { id: "pink-hoodie", title: "Pink Hoodie" },
-        { id: "flowers", title: "Flowers" },
-        { id: "just-another-girl", title: "Just Another Girl" }
-      ]
-    },
+  // 12. Whiplash - The 5th Mini Album
+  {
+    id: 'whiplash',
+    title: 'Whiplash - The 5th Mini Album',
+    sub: 'EP',
+    cover: 'whiplash.jpg',
+    tracks: [
+      { id: 'whiplash-title', title: 'Whiplash', sub: '[TITLE]' },
+      { id: 'kill-it', title: 'Kill it' },
+      { id: 'flights-not-feelings', title: 'Flights, Not Feelings' },
+      { id: 'pink-hoodie', title: 'Pink Hoodie' },
+      { id: 'flowers', title: 'Flowers' },
+      { id: 'just-another-girl', title: 'Just Another Girl' }
+    ]
+  },
 
-    // 13. Dirty Work
-    {
-      id: "dirty-work",
-      title: "Dirty Work",
-      sub: "Single Album",
-      cover: "dirty-work.jpg",
-      tracks: [
-        { id: "dirty-work-title", title: "Dirty Work", sub: "[TITLE]" },
-        { id: "dirty-work-flo", title: "Dirty Work (Feat. Flo Milli)" },
-        { id: "dirty-work-eng", title: "Dirty Work (English Ver.)" }
-      ]
-    },
+  // 13. Dirty Work
+  {
+    id: 'dirty-work',
+    title: 'Dirty Work',
+    sub: 'Single Album',
+    cover: 'dirty-work.jpg',
+    tracks: [
+      { id: 'dirty-work-title', title: 'Dirty Work', sub: '[TITLE]' },
+      { id: 'dirty-work-flo', title: 'Dirty Work (Feat. Flo Milli)' },
+      { id: 'dirty-work-eng', title: 'Dirty Work (English Ver.)' }
+    ]
+  },
 
-    // 14. Rich Man - The 6th Mini Album
-    {
-      id: "rich-man",
-      title: "Rich Man - The 6th Mini Album",
-      sub: "EP",
-      cover: "rich-man.jpg",
-      tracks: [
-        { id: "rich-man-title", title: "Rich Man", sub: "[TITLE]" },
-        { id: "drift", title: "Drift" },
-        { id: "bubble", title: "Bubble" },
-        { id: "count-on-me", title: "Count On Me" },
-        { id: "angel-48", title: "Angel #48" },
-        { id: "to-the-girls", title: "To The Girls" }
-      ]
-    },
+  // 14. Rich Man - The 6th Mini Album
+  {
+    id: 'rich-man',
+    title: 'Rich Man - The 6th Mini Album',
+    sub: 'EP',
+    cover: 'rich-man.jpg',
+    tracks: [
+      { id: 'rich-man-title', title: 'Rich Man', sub: '[TITLE]' },
+      { id: 'drift', title: 'Drift' },
+      { id: 'bubble', title: 'Bubble' },
+      { id: 'count-on-me', title: 'Count On Me' },
+      { id: 'angel-48', title: 'Angel #48' },
+      { id: 'to-the-girls', title: 'To The Girls' }
+    ]
+  },
 
-    // 15. SYNK : aeXIS LINE
-    {
-      id: "axis-line",
-      title: "SYNK : aeXIS LINE - 2025 Special Digital Single",
-      sub: "Single Album",
-      cover: "axis-line.jpg",
-      tracks: [
-        { id: "blue-winter", title: "BLUE (WINTER Solo)" },
-        { id: "ketchup-lemonade", title: "Ketchup And Lemonade (NINGNING Solo)" },
-        { id: "tornado-giselle", title: "Tornado (GISELLE Solo)" },
-        { id: "good-stuff-karina", title: "GOOD STUFF (KARINA Solo)" }
-      ]
-    },
+  // 15. SYNK : aeXIS LINE
+  {
+    id: 'axis-line',
+    title: 'SYNK : aeXIS LINE - 2025 Special Digital Single',
+    sub: 'Single Album',
+    cover: 'axis-line.jpg',
+    tracks: [
+      { id: 'blue-winter', title: 'BLUE (WINTER Solo)' },
+      { id: 'ketchup-lemonade', title: 'Ketchup And Lemonade (NINGNING Solo)' },
+      { id: 'tornado-giselle', title: 'Tornado (GISELLE Solo)' },
+      { id: 'good-stuff-karina', title: 'GOOD STUFF (KARINA Solo)' }
+    ]
+  },
 
-    // 16. OST / Collaboration
-    {
-      id: "ost-collab",
-      title: "OST / Collaboration",
-      sub: "Special Releases",
-      cover: "ost-main.jpg",
-      tracks: [
-        { id: "hold-on-tight", title: "Hold On Tight", cover: "hold-on-tight.jpg" },
-        { id: "we-go", title: "We Go", cover: "we-go.jpg" },
-        { id: "we-go-eng", title: "We Go (Eng ver.)", cover: "we-go-eng.jpg" },
-        {
-          id: "sidae-yugam",
-          title: "시대유감 (時代遺憾) (2024 aespa Remake Ver.)",
-          cover: "sidae-yugam.jpg"
-        },
-        { id: "get-goin", title: "Get Goin’", cover: "get-goin.jpg" },
-        { id: "die-trying", title: "Die Trying", cover: "die-trying.jpg" },
-        { id: "rum-pum-pum", title: "첫 사랑니 (Rum Pum Pum Pum)", cover: "rum-pum-pum.jpg" },
-        { id: "dark-arts", title: "Dark Arts", cover: "dark-arts.jpg" },
-        { id: "dollhouse-world", title: "Dollhouse World", cover: "dollhouse-world.jpg" }
-      ]
-    },
+  // 16. OST / Collaboration (트랙별 다른 커버)
+  {
+    id: 'ost-collab',
+    title: 'OST / Collaboration',
+    sub: 'Special Releases',
+    cover: 'ost-main.jpg',
+    tracks: [
+      { id: 'hold-on-tight', title: 'Hold On Tight', cover: 'hold-on-tight.jpg' },
+      { id: 'we-go', title: 'We Go', cover: 'we-go.jpg' },
+      { id: 'we-go-eng', title: 'We Go (Eng ver.)', cover: 'we-go-eng.jpg' },
+      {
+        id: 'sidae-yugam',
+        title: '시대유감 (時代遺憾) (2024 aespa Remake Ver.)',
+        cover: 'sidae-yugam.jpg'
+      },
+      { id: 'get-goin', title: 'Get Goin’', cover: 'get-goin.jpg' },
+      { id: 'die-trying', title: 'Die Trying', cover: 'die-trying.jpg' },
+      { id: 'rum-pum-pum', title: '첫 사랑니 (Rum Pum Pum Pum)', cover: 'rum-pum-pum.jpg' },
+      { id: 'dark-arts', title: 'Dark Arts', cover: 'dark-arts.jpg' },
+      { id: 'dollhouse-world', title: 'Dollhouse World', cover: 'dollhouse-world.jpg' }
+    ]
+  },
 
-    // 17. Remix / Reworks
-    {
-      id: "remix-collection",
-      title: "Remix Albums",
-      sub: "Remix & Reworks",
-      cover: "remix-main.jpg",
-      tracks: [
-        // iScreaM Vol.10 : Next Level Remixes
-        {
-          id: "next-level-habstrakt",
-          title: "Next Level (Habstrakt Remix)",
-          sub: "iScreaM Vol.10 : Next Level Remixes",
-          cover: "iscream-vol10.jpg"
-        },
-        {
-          id: "next-level-imlay",
-          title: "Next Level (IMLAY Remix)",
-          sub: "iScreaM Vol.10 : Next Level Remixes",
-          cover: "iscream-vol10.jpg"
-        },
-        {
-          id: "next-level-lionclad",
-          title: "Next Level (Lionclad Remix)",
-          sub: "iScreaM Vol.10 : Next Level Remixes",
-          cover: "iscream-vol10.jpg"
-        },
+  // 17. Remix / Reworks 모음
+  {
+    id: 'remix-collection',
+    title: 'Remix Albums',
+    sub: 'Remix & Reworks',
+    cover: 'remix-main.jpg',
+    tracks: [
+      // iScreaM Vol.10 : Next Level Remixes
+      {
+        id: 'next-level-habstrakt',
+        title: 'Next Level (Habstrakt Remix)',
+        sub: 'iScreaM Vol.10 : Next Level Remixes',
+        cover: 'iscream-vol10.jpg'
+      },
+      {
+        id: 'next-level-imlay',
+        title: 'Next Level (IMLAY Remix)',
+        sub: 'iScreaM Vol.10 : Next Level Remixes',
+        cover: 'iscream-vol10.jpg'
+      },
+      {
+        id: 'next-level-lionclad',
+        title: 'Next Level (Lionclad Remix)',
+        sub: 'iScreaM Vol.10 : Next Level Remixes',
+        cover: 'iscream-vol10.jpg'
+      },
 
-        // iScreaM Vol.18 : Girls Remixes
-        {
-          id: "girls-brllnt",
-          title: "Girls (BRLLNT Remix)",
-          sub: "iScreaM Vol.18 : Girls Remixes",
-          cover: "iscream-vol18.jpg"
-        },
-        {
-          id: "girls-minit",
-          title: "Girls (Minit Remix)",
-          sub: "iScreaM Vol.18 : Girls Remixes",
-          cover: "iscream-vol18.jpg"
-        },
+      // iScreaM Vol.18 : Girls Remixes
+      {
+        id: 'girls-brllnt',
+        title: 'Girls (BRLLNT Remix)',
+        sub: 'iScreaM Vol.18 : Girls Remixes',
+        cover: 'iscream-vol18.jpg'
+      },
+      {
+        id: 'girls-minit',
+        title: 'Girls (Minit Remix)',
+        sub: 'iScreaM Vol.18 : Girls Remixes',
+        cover: 'iscream-vol18.jpg'
+      },
 
-        // iScreaM Vol.26 : Spicy Remix
-        {
-          id: "spicy-nitepunk",
-          title: "Spicy (Nitepunk Remix)",
-          sub: "iScreaM Vol.26 : Spicy Remix",
-          cover: "spicy-remix.jpg"
-        },
+      // iScreaM Vol.26 : Spicy Remix
+      {
+        id: 'spicy-nitepunk',
+        title: 'Spicy (Nitepunk Remix)',
+        sub: 'iScreaM Vol.26 : Spicy Remix',
+        cover: 'spicy-remix.jpg'
+      },
 
-        // Better Things Remix
-        {
-          id: "better-things-tropkillaz",
-          title: "Better Things (Tropkillaz Remix)",
-          sub: "Better Things Remix",
-          cover: "better-things-remix.jpg"
-        },
-        {
-          id: "better-things-raye",
-          title: "Better Things (RAYE Remix)",
-          sub: "Better Things Remix",
-          cover: "better-things-remix.jpg"
-        },
-        {
-          id: "better-things-dance",
-          title: "Better Things (Dance Remix)",
-          sub: "Better Things Remix",
-          cover: "better-things-remix.jpg"
-        },
+      // Better Things Remix
+      {
+        id: 'better-things-tropkillaz',
+        title: 'Better Things (Tropkillaz Remix)',
+        sub: 'Better Things Remix',
+        cover: 'better-things-remix.jpg'
+      },
+      {
+        id: 'better-things-raye',
+        title: 'Better Things (RAYE Remix)',
+        sub: 'Better Things Remix',
+        cover: 'better-things-remix.jpg'
+      },
+      {
+        id: 'better-things-dance',
+        title: 'Better Things (Dance Remix)',
+        sub: 'Better Things Remix',
+        cover: 'better-things-remix.jpg'
+      },
 
-        // iScreaM Vol.33 : Supernova / Armageddon Remixes
-        {
-          id: "supernova-grimes",
-          title: "Supernova (Grimes Remix)",
-          sub: "iScreaM Vol.33 : Supernova / Armageddon Remixes",
-          cover: "iscream-vol33.jpg"
-        },
-        {
-          id: "armageddon-flava-d",
-          title: "Armageddon (Flava D Remix)",
-          sub: "iScreaM Vol.33 : Supernova / Armageddon Remixes",
-          cover: "iscream-vol33.jpg"
-        },
-        {
-          id: "armageddon-2spade-remix",
-          title: "Armageddon (2Spade Remix)",
-          sub: "iScreaM Vol.33 : Supernova / Armageddon Remixes",
-          cover: "iscream-vol33.jpg"
-        },
-        {
-          id: "armageddon-mount-xlr",
-          title: "Armageddon (Mount XLR Remix)",
-          sub: "iScreaM Vol.33 : Supernova / Armageddon Remixes",
-          cover: "iscream-vol33.jpg"
-        },
+      // iScreaM Vol.33 : Supernova / Armageddon Remixes
+      {
+        id: 'supernova-grimes',
+        title: 'Supernova (Grimes Remix)',
+        sub: 'iScreaM Vol.33 : Supernova / Armageddon Remixes',
+        cover: 'iscream-vol33.jpg'
+      },
+      {
+        id: 'armageddon-flava-d',
+        title: 'Armageddon (Flava D Remix)',
+        sub: 'iScreaM Vol.33 : Supernova / Armageddon Remixes',
+        cover: 'iscream-vol33.jpg'
+      },
+      {
+        id: 'armageddon-2spade-remix',
+        title: 'Armageddon (2Spade Remix)',
+        sub: 'iScreaM Vol.33 : Supernova / Armageddon Remixes',
+        cover: 'iscream-vol33.jpg'
+      },
+      {
+        id: 'armageddon-mount-xlr',
+        title: 'Armageddon (Mount XLR Remix)',
+        sub: 'iScreaM Vol.33 : Supernova / Armageddon Remixes',
+        cover: 'iscream-vol33.jpg'
+      },
 
-        // RE:WORKS
-        {
-          id: "supernova-reworks",
-          title: "Supernova (KENZIE RE:WORKS)",
-          sub: "RE:WORKS",
-          cover: "reworks.jpg"
-        },
+      // RE:WORKS
+      {
+        id: 'supernova-reworks',
+        title: 'Supernova (KENZIE RE:WORKS)',
+        sub: 'RE:WORKS',
+        cover: 'reworks.jpg'
+      },
 
-        // K-POP ScreaM 1
-        {
-          id: "whiplash-monotostereo",
-          title: "Whiplash (monotostereo Remix)",
-          sub: "K-POP ScreaM 1",
-          cover: "kpop-scream-1.jpg"
-        },
-        {
-          id: "up-coziest",
-          title: "UP (KARINA Solo) (Coziest Remix)",
-          sub: "K-POP ScreaM 1",
-          cover: "kpop-scream-1.jpg"
-        },
-        {
-          id: "flights-demicat",
-          title: "Flights, Not Feelings (Demicat Remix)",
-          sub: "K-POP ScreaM 1",
-          cover: "kpop-scream-1.jpg"
-        },
-        {
-          id: "spark-2spade-remix",
-          title: "Spark (WINTER Solo) (2Spade Remix)",
-          sub: "K-POP ScreaM 1",
-          cover: "kpop-scream-1.jpg"
-        },
+      // K-POP ScreaM 1
+      {
+        id: 'whiplash-monotostereo',
+        title: 'Whiplash (monotostereo Remix)',
+        sub: 'K-POP ScreaM 1',
+        cover: 'kpop-scream-1.jpg'
+      },
+      {
+        id: 'up-coziest',
+        title: 'UP (KARINA Solo) (Coziest Remix)',
+        sub: 'K-POP ScreaM 1',
+        cover: 'kpop-scream-1.jpg'
+      },
+      {
+        id: 'flights-demicat',
+        title: 'Flights, Not Feelings (Demicat Remix)',
+        sub: 'K-POP ScreaM 1',
+        cover: 'kpop-scream-1.jpg'
+      },
+      {
+        id: 'spark-2spade-remix',
+        title: 'Spark (WINTER Solo) (2Spade Remix)',
+        sub: 'K-POP ScreaM 1',
+        cover: 'kpop-scream-1.jpg'
+      },
 
-        // Whiplash (English Ver.)
-        {
-          id: "whiplash-eng",
-          title: "Whiplash (English Ver.)",
-          sub: "Whiplash (English Ver.)",
-          cover: "whiplash-eng-remix.jpg"
-        },
-        {
-          id: "whiplash-steve-aoki",
-          title: "Whiplash (Steve Aoki Remix)",
-          sub: "Whiplash (English Ver.)",
-          cover: "whiplash-eng-remix.jpg"
-        },
-        {
-          id: "whiplash-eng-sped",
-          title: "Whiplash (English Ver.) (Sped Up Ver.)",
-          sub: "Whiplash (English Ver.)",
-          cover: "whiplash-eng-remix.jpg"
-        },
+      // Whiplash (English Ver.)
+      {
+        id: 'whiplash-eng',
+        title: 'Whiplash (English Ver.)',
+        sub: 'Whiplash (English Ver.)',
+        cover: 'whiplash-eng-remix.jpg'
+      },
+      {
+        id: 'whiplash-steve-aoki',
+        title: 'Whiplash (Steve Aoki Remix)',
+        sub: 'Whiplash (English Ver.)',
+        cover: 'whiplash-eng-remix.jpg'
+      },
+      {
+        id: 'whiplash-eng-sped',
+        title: 'Whiplash (English Ver.) (Sped Up Ver.)',
+        sub: 'Whiplash (English Ver.)',
+        cover: 'whiplash-eng-remix.jpg'
+      },
 
-        // K-POP ScreaM 2
-        {
-          id: "licorice-loozbone",
-          title: "Licorice (LOOZBONE Remix)",
-          sub: "K-POP ScreaM 2",
-          cover: "kpop-scream-2.jpg"
-        },
-        {
-          id: "armageddon-sixthema-epiik",
-          title: "Armageddon (SixThema & Epiik Remix)",
-          sub: "K-POP ScreaM 2",
-          cover: "kpop-scream-2.jpg"
-        },
-        {
-          id: "supernova-fahjah",
-          title: "Supernova (Fahjah Remix)",
-          sub: "K-POP ScreaM 2",
-          cover: "kpop-scream-2.jpg"
-        },
-        {
-          id: "whiplash-dj-long-nhat",
-          title: "Whiplash (DJ Long Nhat Remix)",
-          sub: "K-POP ScreaM 2",
-          cover: "kpop-scream-2.jpg"
-        },
+      // K-POP ScreaM 2
+      {
+        id: 'licorice-loozbone',
+        title: 'Licorice (LOOZBONE Remix)',
+        sub: 'K-POP ScreaM 2',
+        cover: 'kpop-scream-2.jpg'
+      },
+      {
+        id: 'armageddon-sixthema-epiik',
+        title: 'Armageddon (SixThema & Epiik Remix)',
+        sub: 'K-POP ScreaM 2',
+        cover: 'kpop-scream-2.jpg'
+      },
+      {
+        id: 'supernova-fahjah',
+        title: 'Supernova (Fahjah Remix)',
+        sub: 'K-POP ScreaM 2',
+        cover: 'kpop-scream-2.jpg'
+      },
+      {
+        id: 'whiplash-dj-long-nhat',
+        title: 'Whiplash (DJ Long Nhat Remix)',
+        sub: 'K-POP ScreaM 2',
+        cover: 'kpop-scream-2.jpg'
+      },
 
-        // Dirty Work (Remixes)
-        {
-          id: "dirty-work-rayray",
-          title: "Dirty Work (RayRay Remix)",
-          sub: "Dirty Work (Remixes)",
-          cover: "dirty-work-remix.jpg"
-        },
-        {
-          id: "dirty-work-arkins",
-          title: "Dirty Work (Arkins Remix)",
-          sub: "Dirty Work (Remixes)",
-          cover: "dirty-work-remix.jpg"
-        },
-        {
-          id: "dirty-work-2spade-remix",
-          title: "Dirty Work (2Spade Remix)",
-          sub: "Dirty Work (Remixes)",
-          cover: "dirty-work-remix.jpg"
-        },
+      // Dirty Work (Remixes)
+      {
+        id: 'dirty-work-rayray',
+        title: 'Dirty Work (RayRay Remix)',
+        sub: 'Dirty Work (Remixes)',
+        cover: 'dirty-work-remix.jpg'
+      },
+      {
+        id: 'dirty-work-arkins',
+        title: 'Dirty Work (Arkins Remix)',
+        sub: 'Dirty Work (Remixes)',
+        cover: 'dirty-work-remix.jpg'
+      },
+      {
+        id: 'dirty-work-2spade-remix',
+        title: 'Dirty Work (2Spade Remix)',
+        sub: 'Dirty Work (Remixes)',
+        cover: 'dirty-work-remix.jpg'
+      },
 
-        // Rich Man (Remixes)
-        {
-          id: "rich-man-sevdaliza",
-          title: "Rich Man (Feat. Sevdaliza)",
-          sub: "Rich Man (Remixes)",
-          cover: "rich-man-remix.jpg"
-        },
-        {
-          id: "rich-man-eng",
-          title: "Rich Man (English Ver.)",
-          sub: "Rich Man (Remixes)",
-          cover: "rich-man-remix.jpg"
-        },
-        {
-          id: "rich-man-yellow-claw",
-          title: "Rich Man (Yellow Claw Remix)",
-          sub: "Rich Man (Remixes)",
-          cover: "rich-man-remix.jpg"
-        },
-        {
-          id: "rich-man-dpr-cream-h4rdy",
-          title: "Rich Man (DPR CREAM & h4rdy Remix)",
-          sub: "Rich Man (Remixes)",
-          cover: "rich-man-remix.jpg"
-        },
-        {
-          id: "rich-man-dpr-artic",
-          title: "Rich Man (DPR ARTIC Remix)",
-          sub: "Rich Man (Remixes)",
-          cover: "rich-man-remix.jpg"
-        }
-      ]
-    }
-  ];
-  // ★ 여기까지 albumPages
+      // Rich Man (Remixes)
+      {
+        id: 'rich-man-sevdaliza',
+        title: 'Rich Man (Feat. Sevdaliza)',
+        sub: 'Rich Man (Remixes)',
+        cover: 'rich-man-remix.jpg'
+      },
+      {
+        id: 'rich-man-eng',
+        title: 'Rich Man (English Ver.)',
+        sub: 'Rich Man (Remixes)',
+        cover: 'rich-man-remix.jpg'
+      },
+      {
+        id: 'rich-man-yellow-claw',
+        title: 'Rich Man (Yellow Claw Remix)',
+        sub: 'Rich Man (Remixes)',
+        cover: 'rich-man-remix.jpg'
+      },
+      {
+        id: 'rich-man-dpr-cream-h4rdy',
+        title: 'Rich Man (DPR CREAM & h4rdy Remix)',
+        sub: 'Rich Man (Remixes)',
+        cover: 'rich-man-remix.jpg'
+      },
+      {
+        id: 'rich-man-dpr-artic',
+        title: 'Rich Man (DPR ARTIC Remix)',
+        sub: 'Rich Man (Remixes)',
+        cover: 'rich-man-remix.jpg'
+      }
+    ]
+  }
+];
 
   const setlistBody = document.getElementById("setlistBody");
 
@@ -1202,3 +1200,4 @@
 </script>
 </body>
 </html>
+
