@@ -50,8 +50,8 @@
       background: linear-gradient(
         90deg,
         #8a63ff 0%,
-        #b97dff 30%,
-        #a2e6ff 70%,
+        #b97dff 22%,
+        #a2e6ff 55%,
         #b8f1ff 100%
       );
       color: #fff;
@@ -158,9 +158,7 @@
       color: #666;
       flex-shrink: 0;
     }
-    .song-delete-btn:hover {
-      background: #e7e9f5;
-    }
+    .song-delete-btn:hover { background: #e7e9f5; }
 
     .ment-row { background: #f3f4f9; }
     .ment-row.dragging { opacity: 0.6; }
@@ -397,6 +395,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
+  // 터치 환경 여부
+  const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
   // 샘플 데이터 – 나중에 네 곡 리스트로 교체
   const albumPages = [
     {
@@ -517,48 +518,50 @@
   }
 
   function attachMentRowDragEvents(row, handle) {
-    // PC용 drag
-    handle.setAttribute("draggable", "true");
-    handle.addEventListener("dragstart", () => {
-      draggedMentRow = row;
-      row.classList.add("dragging");
-    });
-    handle.addEventListener("dragend", () => {
-      if (draggedMentRow === row) draggedMentRow = null;
-      row.classList.remove("dragging");
-      updateOrderNumbers();
-    });
-
-    // 모바일 touch
-    let touchDragging = false;
-
-    handle.addEventListener("touchstart", (e) => {
-      touchDragging = true;
-      draggedMentRow = row;
-      row.classList.add("dragging");
-    }, { passive: true });
-
-    handle.addEventListener("touchend", () => {
-      if (touchDragging) {
-        touchDragging = false;
+    if (!isTouch) {
+      // PC: HTML5 drag
+      handle.setAttribute("draggable", "true");
+      handle.addEventListener("dragstart", () => {
+        draggedMentRow = row;
+        row.classList.add("dragging");
+      });
+      handle.addEventListener("dragend", () => {
         if (draggedMentRow === row) draggedMentRow = null;
         row.classList.remove("dragging");
         updateOrderNumbers();
-      }
-    });
+      });
+    } else {
+      // 모바일: touch 기반
+      let touchDragging = false;
 
-    handle.addEventListener("touchmove", (e) => {
-      if (!touchDragging || !draggedMentRow) return;
-      const touch = e.touches[0];
-      const y = touch.clientY;
-      const afterRow = getRowAfterY(y);
-      if (!afterRow) {
-        setlistBody.appendChild(draggedMentRow);
-      } else {
-        setlistBody.insertBefore(draggedMentRow, afterRow);
-      }
-      e.preventDefault();
-    }, { passive: false });
+      handle.addEventListener("touchstart", () => {
+        touchDragging = true;
+        draggedMentRow = row;
+        row.classList.add("dragging");
+      }, { passive: true });
+
+      handle.addEventListener("touchend", () => {
+        if (touchDragging) {
+          touchDragging = false;
+          if (draggedMentRow === row) draggedMentRow = null;
+          row.classList.remove("dragging");
+          updateOrderNumbers();
+        }
+      });
+
+      handle.addEventListener("touchmove", (e) => {
+        if (!touchDragging || !draggedMentRow) return;
+        const touch = e.touches[0];
+        const y = touch.clientY;
+        const afterRow = getRowAfterY(y);
+        if (!afterRow) {
+          setlistBody.appendChild(draggedMentRow);
+        } else {
+          setlistBody.insertBefore(draggedMentRow, afterRow);
+        }
+        e.preventDefault();
+      }, { passive: false });
+    }
   }
 
   function createMentRow() {
@@ -602,7 +605,7 @@
   function buildBaseTable() {
     basePattern.forEach(type => {
       if (type === "song") {
-        createSongRow(false);   // 기본 26곡: 삭제 불가
+        createSongRow(false); // 기본 26곡: 삭제 불가
       } else {
         createMentRow();
       }
@@ -618,7 +621,7 @@
     else setlistBody.insertBefore(draggedMentRow, afterRow);
   });
 
-  // 곡 선택 모달 관련
+  // 곡 선택 모달
   const songModal = document.getElementById("songModal");
   const albumCoverEl = document.getElementById("albumCover");
   const albumTitleEl = document.getElementById("albumTitle");
