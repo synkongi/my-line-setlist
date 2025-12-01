@@ -1226,20 +1226,41 @@ sub.textContent = rawSub;
     updateOrderNumbers();
   });
 
-  document.getElementById("exportBtn").addEventListener("click", () => {
-    const posterEl = document.getElementById("poster");
-    html2canvas(posterEl, { scale: 2 }).then(canvas => {
-      const link = document.createElement("a");
-      link.download = "setlist.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+ document.getElementById("exportBtn").addEventListener("click", () => {
+  const posterEl = document.getElementById("poster");
+
+  // 1) 캡쳐 전에 숨길 요소들 모으기
+  const toHide = posterEl.querySelectorAll(
+    ".ment-handle, .ment-delete-btn, .song-delete-btn"
+  );
+
+  // 기존 visibility 기억해두기
+  const prevVisibilities = [];
+  toHide.forEach(el => {
+    prevVisibilities.push(el.style.visibility);
+    el.style.visibility = "hidden";
+  });
+
+  // 2) 캡쳐
+  html2canvas(posterEl, { scale: 2 }).then(canvas => {
+    // 3) 저장
+    const link = document.createElement("a");
+    link.download = "setlist.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+
+    // 4) 캡쳐 끝나면 다시 원래대로 복구
+    toHide.forEach((el, idx) => {
+      el.style.visibility = prevVisibilities[idx] || "";
     });
   });
+});
 
   buildBaseTable();
 </script>
 </body>
 </html>
+
 
 
 
