@@ -27,7 +27,6 @@
       margin: 0 auto 40px;
     }
 
-    /* 상단 컨트롤 */
     .controls {
       display: flex;
       gap: 8px;
@@ -45,12 +44,10 @@
     .controls button:hover {
       background: #eef1f8;
     }
-
     .controls .spacer {
       flex: 1;
     }
 
-    /* 포스터 전체 영역 (여기를 캡처) */
     .poster {
       background: #fff;
       border-radius: 12px;
@@ -58,7 +55,6 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.06);
     }
 
-    /* 헤더 영역 */
     .poster-header {
       padding: 28px 32px 20px;
       background: linear-gradient(90deg, #8a63ff, #b97dff, #a2e6ff);
@@ -116,7 +112,6 @@
       color: rgba(255,255,255,0.6);
     }
 
-    /* 테이블 영역 */
     .table-wrapper {
       padding: 0 24px 32px;
     }
@@ -163,12 +158,10 @@
     .song-cell-btn.empty {
       color: #c0c4d4;
     }
-
     .song-row:nth-child(even) .song-cell-btn {
       background: #fafbff;
     }
 
-    /* 멘트/VCR 행 */
     .ment-row {
       background: #f3f4f9;
     }
@@ -200,7 +193,6 @@
       background: #c8cfea;
     }
 
-    /* 맨 아래 크레딧 */
     .credit {
       padding: 6px 16px 10px;
       font-size: 11px;
@@ -208,7 +200,6 @@
       color: #888;
     }
 
-    /* 곡 선택 모달 */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -368,13 +359,12 @@
 <div class="app">
   <div class="controls">
     <button id="addMentBtn" type="button">+ 멘트/VCR 행 추가</button>
-    <button id="addSongBtn" type="button">+ 곡 2개 추가</button>
+    <button id="addSongBtn" type="button">+ 곡 추가</button>
     <div class="spacer"></div>
     <button id="exportBtn" type="button">이미지 저장</button>
   </div>
 
   <div id="poster" class="poster">
-    <!-- 상단 타이틀 -->
     <div class="poster-header">
       <div class="header-layout">
         <div>
@@ -394,18 +384,15 @@
       </div>
     </div>
 
-    <!-- 표 -->
     <div class="table-wrapper">
       <table>
         <thead>
         <tr>
           <th style="width:52px;">순서</th>
-          <th>곡명 / 멘트·VCR</th>
+          <th>곡명</th>
         </tr>
         </thead>
-        <tbody id="setlistBody">
-        <!-- JS에서 기본 구조 생성 -->
-        </tbody>
+        <tbody id="setlistBody"></tbody>
       </table>
     </div>
 
@@ -413,7 +400,6 @@
   </div>
 </div>
 
-<!-- 곡 선택 모달 -->
 <div id="songModal" class="modal-overlay">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
@@ -433,17 +419,14 @@
           <div id="albumSub" class="album-meta-sub">AESPA</div>
         </div>
       </div>
-      <ul id="trackList" class="track-list">
-        <!-- JS에서 채움 -->
-      </ul>
+      <ul id="trackList" class="track-list"></ul>
     </div>
   </div>
 </div>
 
-<!-- html2canvas (DOM → 이미지 캡처용) -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
-  // ====== 곡/앨범 데이터 (여기만 나중에 네가 채우면 됨) ======
+  // 앨범/곡 데이터 – 나중에 네 리스트로 교체
   const albumPages = [
     {
       id: "sample1",
@@ -453,7 +436,7 @@
       tracks: [
         { id: "girls-title", title: "Girls", sub: "Girls", cover: "girls.jpg" },
         { id: "illusion", title: "도깨비불 (Illusion)", sub: "Girls", cover: "girls.jpg" },
-        { id: "lifestyle", title: "Life's Too Short", sub: "Girls", cover: "girls.jpg" }
+        { id: "lts", title: "Life's Too Short", sub: "Girls", cover: "girls.jpg" }
       ]
     },
     {
@@ -467,13 +450,11 @@
         { id: "licorice", title: "Licorice", sub: "Drama", cover: "drama.jpg" }
       ]
     }
-    // 여기 아래로 실제 AESPA 데이터 넣으면 됨.
   ];
 
   const setlistBody = document.getElementById("setlistBody");
 
-  // ====== 기본 표 구조 (멘트/VCR 위치 유지하면서 song 26개) ======
-  // ment = 멘트/VCR 행, song = 곡 행
+  // 기본 패턴: song 26개 + 중간 멘트/VCR
   const basePattern = [
     "ment",
     "song","song","song","song",
@@ -489,8 +470,7 @@
     "song","song","song","song",
     "ment",
     "song","song","song"
-  ];
-  // song 개수는 26개
+  ]; // song 26개
 
   let draggedMentRow = null;
   let currentSongCell = null;
@@ -531,15 +511,48 @@
     setlistBody.appendChild(tr);
   }
 
-  function attachMentRowDragEvents(row, dragHandle) {
-    dragHandle.addEventListener("dragstart", () => {
+  function attachMentRowDragEvents(row, handle) {
+    // PC: drag & drop
+    handle.addEventListener("dragstart", () => {
       draggedMentRow = row;
       row.classList.add("dragging");
     });
-    dragHandle.addEventListener("dragend", () => {
+    handle.addEventListener("dragend", () => {
       if (draggedMentRow === row) draggedMentRow = null;
       row.classList.remove("dragging");
+      updateOrderNumbers();
     });
+
+    // 모바일: touch 기반 드래그
+    let touchDragging = false;
+
+    handle.addEventListener("touchstart", (e) => {
+      touchDragging = true;
+      draggedMentRow = row;
+      row.classList.add("dragging");
+    }, { passive: true });
+
+    handle.addEventListener("touchend", () => {
+      if (touchDragging) {
+        touchDragging = false;
+        if (draggedMentRow === row) draggedMentRow = null;
+        row.classList.remove("dragging");
+        updateOrderNumbers();
+      }
+    });
+
+    handle.addEventListener("touchmove", (e) => {
+      if (!touchDragging || !draggedMentRow) return;
+      const touch = e.touches[0];
+      const y = touch.clientY;
+      const afterRow = getRowAfterY(y);
+      if (!afterRow) {
+        setlistBody.appendChild(draggedMentRow);
+      } else {
+        setlistBody.insertBefore(draggedMentRow, afterRow);
+      }
+      e.preventDefault();
+    }, { passive: false });
   }
 
   function createMentRow() {
@@ -587,7 +600,6 @@
     updateOrderNumbers();
   }
 
-  // 드래그 이동 (멘트/VCR 행만)
   function getRowAfterY(y) {
     const rows = Array.from(setlistBody.querySelectorAll("tr")).filter(
       row => row !== draggedMentRow
@@ -614,7 +626,7 @@
     }
   });
 
-  // ====== 곡 선택 모달 ======
+  // 곡 선택 모달
   const songModal = document.getElementById("songModal");
   const albumCoverEl = document.getElementById("albumCover");
   const albumTitleEl = document.getElementById("albumTitle");
@@ -678,7 +690,7 @@
       trackListEl.appendChild(li);
     });
 
-    // [직접 입력] 항목
+    // 직접 입력
     const liDirect = document.createElement("li");
     const directBtn = document.createElement("button");
     directBtn.type = "button";
@@ -734,15 +746,13 @@
     }
   });
 
-  // ====== 버튼 기능 ======
+  // 버튼들
   document.getElementById("addMentBtn").addEventListener("click", () => {
     createMentRow();
     updateOrderNumbers();
   });
 
   document.getElementById("addSongBtn").addEventListener("click", () => {
-    // 제한 없이 2개씩 추가
-    createSongRow();
     createSongRow();
     updateOrderNumbers();
   });
@@ -757,7 +767,6 @@
     });
   });
 
-  // 초기 표 생성
   buildBaseTable();
 </script>
 </body>
