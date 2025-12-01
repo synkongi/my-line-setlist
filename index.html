@@ -1130,8 +1130,16 @@ page.tracks.forEach(track => {
   // 밑줄(앨범명) – [TITLE] 제거 + 없는 경우엔 page.title 사용
   const sub = document.createElement("div");
   sub.className = "track-text-sub";
-  const rawSub = track.sub || page.title || "";
-  sub.textContent = rawSub.replace("[TITLE]", "").trim();
+  let rawSub = track.sub || "";
+rawSub = rawSub.replace("[TITLE]", "").trim();
+
+// 빈 문자열이면 → 강제로 앨범명 넣기
+if (!rawSub) {
+  rawSub = page.title;
+}
+
+sub.textContent = rawSub;
+
 
   meta.appendChild(main);
   meta.appendChild(sub);
@@ -1223,6 +1231,7 @@ page.tracks.forEach(track => {
 </script>
 </body>
 </html>
+
 
 
 
