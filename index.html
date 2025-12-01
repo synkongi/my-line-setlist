@@ -5,9 +5,7 @@
   <title>SINK : MY LINE – Setlist Builder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       padding: 24px;
@@ -21,11 +19,7 @@
       background: none;
       font-family: inherit;
     }
-
-    .app {
-      max-width: 900px;
-      margin: 0 auto 40px;
-    }
+    .app { max-width: 900px; margin: 0 auto 40px; }
 
     .controls {
       display: flex;
@@ -41,12 +35,8 @@
       background: #fff;
       font-size: 13px;
     }
-    .controls button:hover {
-      background: #eef1f8;
-    }
-    .controls .spacer {
-      flex: 1;
-    }
+    .controls button:hover { background: #eef1f8; }
+    .controls .spacer { flex: 1; }
 
     .poster {
       background: #fff;
@@ -57,11 +47,16 @@
 
     .poster-header {
       padding: 28px 32px 20px;
-      background: linear-gradient(90deg, #8a63ff, #b97dff, #a2e6ff);
+      background: linear-gradient(
+        90deg,
+        #8a63ff 0%,
+        #b97dff 30%,
+        #a2e6ff 70%,
+        #b8f1ff 100%
+      );
       color: #fff;
       position: relative;
     }
-
     .header-left-title-top {
       font-size: 32px;
       font-weight: 800;
@@ -73,14 +68,12 @@
       font-weight: 700;
       margin-top: 6px;
     }
-
     .header-layout {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 16px;
     }
-
     .header-right {
       text-align: right;
       font-size: 16px;
@@ -108,20 +101,15 @@
       text-align: right;
       outline: none;
     }
-    .producer-input::placeholder {
-      color: rgba(255,255,255,0.6);
-    }
+    .producer-input::placeholder { color: rgba(255,255,255,0.6); }
 
-    .table-wrapper {
-      padding: 0 24px 32px;
-    }
+    .table-wrapper { padding: 0 24px 32px; }
 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
     }
-
     thead th {
       background: #e0e2ed;
       color: #555;
@@ -130,10 +118,7 @@
       text-align: center;
       font-weight: 600;
     }
-
-    tbody td {
-      border-bottom: 1px solid #f0f1f6;
-    }
+    tbody td { border-bottom: 1px solid #f0f1f6; }
 
     .order-cell {
       width: 52px;
@@ -142,46 +127,63 @@
       font-variant-numeric: tabular-nums;
     }
 
+    .song-title-cell { padding: 0; }
+    .song-cell-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 10px;
+    }
     .song-cell-btn {
-      width: 100%;
-      padding: 10px 12px;
+      flex: 1;
+      padding: 8px 10px;
       text-align: center;
       font-size: 13px;
-      border-radius: 0;
+      border-radius: 4px;
       background: #fff;
       color: #333;
       border: none;
     }
-    .song-cell-btn:hover {
-      background: #f4f6fc;
+    .song-cell-btn:hover { background: #f4f6fc; }
+    .song-cell-btn.empty { color: #c0c4d4; }
+    .song-row:nth-child(even) .song-cell-btn { background: #fafbff; }
+
+    .song-delete-btn {
+      padding: 4px 8px;
+      font-size: 11px;
+      border-radius: 4px;
+      border: 1px solid #e0e2f0;
+      background: #f7f8fd;
+      color: #666;
+      flex-shrink: 0;
     }
-    .song-cell-btn.empty {
-      color: #c0c4d4;
-    }
-    .song-row:nth-child(even) .song-cell-btn {
-      background: #fafbff;
+    .song-delete-btn:hover {
+      background: #e7e9f5;
     }
 
-    .ment-row {
-      background: #f3f4f9;
-    }
-    .ment-row.dragging {
-      opacity: 0.6;
-    }
+    .ment-row { background: #f3f4f9; }
+    .ment-row.dragging { opacity: 0.6; }
     .ment-cell {
       padding: 8px 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       font-size: 12px;
       color: #666;
-      cursor: move;
     }
     .ment-label {
       font-weight: 600;
       letter-spacing: 0.04em;
     }
+    .ment-handle {
+      font-size: 16px;
+      cursor: grab;
+      user-select: none;
+      padding: 2px 4px;
+    }
+    .ment-row.dragging .ment-handle { cursor: grabbing; }
     .ment-delete-btn {
       padding: 3px 8px;
       font-size: 11px;
@@ -189,9 +191,7 @@
       background: #dde2f2;
       color: #445;
     }
-    .ment-delete-btn:hover {
-      background: #c8cfea;
-    }
+    .ment-delete-btn:hover { background: #c8cfea; }
 
     .credit {
       padding: 6px 16px 10px;
@@ -209,9 +209,7 @@
       justify-content: center;
       z-index: 1000;
     }
-    .modal-overlay.open {
-      display: flex;
-    }
+    .modal-overlay.open { display: flex; }
     .modal {
       background: #fff;
       border-radius: 12px;
@@ -230,10 +228,7 @@
       justify-content: space-between;
       gap: 8px;
     }
-    .modal-title {
-      font-size: 14px;
-      font-weight: 600;
-    }
+    .modal-title { font-size: 14px; font-weight: 600; }
     .page-nav {
       display: flex;
       align-items: center;
@@ -250,14 +245,8 @@
       justify-content: center;
       background: #fff;
     }
-    .page-nav button:disabled {
-      opacity: 0.4;
-      cursor: default;
-    }
-    .page-indicator {
-      min-width: 56px;
-      text-align: center;
-    }
+    .page-nav button:disabled { opacity: 0.4; cursor: default; }
+    .page-indicator { min-width: 56px; text-align: center; }
     .modal-close {
       font-size: 18px;
       line-height: 1;
@@ -298,9 +287,7 @@
       padding: 0;
       margin: 8px 0 0;
     }
-    .track-list li + li {
-      border-top: 1px solid #f0f1f6;
-    }
+    .track-list li + li { border-top: 1px solid #f0f1f6; }
     .track-btn {
       width: 100%;
       padding: 9px 4px;
@@ -318,9 +305,7 @@
       background: #ddd;
       flex-shrink: 0;
     }
-    .track-text-main {
-      font-weight: 500;
-    }
+    .track-text-main { font-weight: 500; }
     .track-text-sub {
       font-size: 11px;
       color: #888;
@@ -330,9 +315,7 @@
       display: flex;
       flex-direction: column;
     }
-    .track-btn:hover {
-      background: #f7f8fd;
-    }
+    .track-btn:hover { background: #f7f8fd; }
     .track-btn.direct-input {
       justify-content: center;
       font-weight: 600;
@@ -340,18 +323,10 @@
     }
 
     @media (max-width: 640px) {
-      .header-left-title-top {
-        font-size: 24px;
-      }
-      .header-left-title-bottom {
-        font-size: 20px;
-      }
-      .poster-header {
-        padding: 20px 18px 14px;
-      }
-      .table-wrapper {
-        padding: 0 14px 20px;
-      }
+      .header-left-title-top { font-size: 24px; }
+      .header-left-title-bottom { font-size: 20px; }
+      .poster-header { padding: 20px 18px 14px; }
+      .table-wrapper { padding: 0 14px 20px; }
     }
   </style>
 </head>
@@ -374,11 +349,7 @@
         <div class="header-right">
           <div class="producer-label">producer</div>
           <div class="producer-name-wrapper">
-            <input
-              id="producerName"
-              class="producer-input"
-              placeholder="your name"
-            />
+            <input id="producerName" class="producer-input" placeholder="your name" />
           </div>
         </div>
       </div>
@@ -426,7 +397,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
-  // 앨범/곡 데이터 – 나중에 네 리스트로 교체
+  // 샘플 데이터 – 나중에 네 곡 리스트로 교체
   const albumPages = [
     {
       id: "sample1",
@@ -454,7 +425,7 @@
 
   const setlistBody = document.getElementById("setlistBody");
 
-  // 기본 패턴: song 26개 + 중간 멘트/VCR
+  // 기본 패턴: song 26개 + 멘트/VCR
   const basePattern = [
     "ment",
     "song","song","song","song",
@@ -491,7 +462,7 @@
     });
   }
 
-  function createSongRow() {
+  function createSongRow(deletable = false) {
     const tr = document.createElement("tr");
     tr.classList.add("song-row");
 
@@ -499,20 +470,55 @@
     tdOrder.className = "order-cell";
 
     const tdTitle = document.createElement("td");
+    tdTitle.className = "song-title-cell";
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "song-cell-wrapper";
+
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "song-cell-btn empty";
     btn.textContent = "곡 선택";
     btn.addEventListener("click", () => openSongModal(btn));
 
-    tdTitle.appendChild(btn);
+    wrapper.appendChild(btn);
+
+    if (deletable) {
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "song-delete-btn";
+      delBtn.textContent = "삭제";
+      delBtn.addEventListener("click", () => {
+        tr.remove();
+        updateOrderNumbers();
+      });
+      wrapper.appendChild(delBtn);
+    }
+
+    tdTitle.appendChild(wrapper);
     tr.appendChild(tdOrder);
     tr.appendChild(tdTitle);
     setlistBody.appendChild(tr);
   }
 
+  function getRowAfterY(y) {
+    const rows = Array.from(setlistBody.querySelectorAll("tr")).filter(
+      row => row !== draggedMentRow
+    );
+    let closest = null;
+    for (const row of rows) {
+      const box = row.getBoundingClientRect();
+      const offset = y - (box.top + box.height / 2);
+      if (offset < 0 && (!closest || offset > closest.offset)) {
+        closest = { offset, row };
+      }
+    }
+    return closest ? closest.row : null;
+  }
+
   function attachMentRowDragEvents(row, handle) {
-    // PC: drag & drop
+    // PC용 drag
+    handle.setAttribute("draggable", "true");
     handle.addEventListener("dragstart", () => {
       draggedMentRow = row;
       row.classList.add("dragging");
@@ -523,7 +529,7 @@
       updateOrderNumbers();
     });
 
-    // 모바일: touch 기반 드래그
+    // 모바일 touch
     let touchDragging = false;
 
     handle.addEventListener("touchstart", (e) => {
@@ -564,7 +570,10 @@
 
     const tdMain = document.createElement("td");
     tdMain.className = "ment-cell";
-    tdMain.setAttribute("draggable", "true");
+
+    const handle = document.createElement("span");
+    handle.className = "ment-handle";
+    handle.textContent = "≡";
 
     const label = document.createElement("span");
     label.className = "ment-label";
@@ -579,20 +588,21 @@
       updateOrderNumbers();
     });
 
+    tdMain.appendChild(handle);
     tdMain.appendChild(label);
     tdMain.appendChild(delBtn);
 
     tr.appendChild(tdOrder);
     tr.appendChild(tdMain);
 
-    attachMentRowDragEvents(tr, tdMain);
+    attachMentRowDragEvents(tr, handle);
     setlistBody.appendChild(tr);
   }
 
   function buildBaseTable() {
     basePattern.forEach(type => {
       if (type === "song") {
-        createSongRow();
+        createSongRow(false);   // 기본 26곡: 삭제 불가
       } else {
         createMentRow();
       }
@@ -600,33 +610,15 @@
     updateOrderNumbers();
   }
 
-  function getRowAfterY(y) {
-    const rows = Array.from(setlistBody.querySelectorAll("tr")).filter(
-      row => row !== draggedMentRow
-    );
-    let closest = null;
-    for (const row of rows) {
-      const box = row.getBoundingClientRect();
-      const offset = y - (box.top + box.height / 2);
-      if (offset < 0 && (!closest || offset > closest.offset)) {
-        closest = { offset, row };
-      }
-    }
-    return closest ? closest.row : null;
-  }
-
   setlistBody.addEventListener("dragover", (e) => {
     if (!draggedMentRow) return;
     e.preventDefault();
     const afterRow = getRowAfterY(e.clientY);
-    if (!afterRow) {
-      setlistBody.appendChild(draggedMentRow);
-    } else {
-      setlistBody.insertBefore(draggedMentRow, afterRow);
-    }
+    if (!afterRow) setlistBody.appendChild(draggedMentRow);
+    else setlistBody.insertBefore(draggedMentRow, afterRow);
   });
 
-  // 곡 선택 모달
+  // 곡 선택 모달 관련
   const songModal = document.getElementById("songModal");
   const albumCoverEl = document.getElementById("albumCover");
   const albumTitleEl = document.getElementById("albumTitle");
@@ -690,7 +682,6 @@
       trackListEl.appendChild(li);
     });
 
-    // 직접 입력
     const liDirect = document.createElement("li");
     const directBtn = document.createElement("button");
     directBtn.type = "button";
@@ -729,31 +720,22 @@
     if (e.target === songModal) closeSongModal();
   });
   prevPageBtn.addEventListener("click", () => {
-    if (currentPageIndex > 0) {
-      currentPageIndex -= 1;
-      renderAlbumPage();
-    }
+    if (currentPageIndex > 0) { currentPageIndex -= 1; renderAlbumPage(); }
   });
   nextPageBtn.addEventListener("click", () => {
-    if (currentPageIndex < albumPages.length - 1) {
-      currentPageIndex += 1;
-      renderAlbumPage();
-    }
+    if (currentPageIndex < albumPages.length - 1) { currentPageIndex += 1; renderAlbumPage(); }
   });
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && songModal.classList.contains("open")) {
-      closeSongModal();
-    }
+    if (e.key === "Escape" && songModal.classList.contains("open")) closeSongModal();
   });
 
-  // 버튼들
   document.getElementById("addMentBtn").addEventListener("click", () => {
     createMentRow();
     updateOrderNumbers();
   });
 
   document.getElementById("addSongBtn").addEventListener("click", () => {
-    createSongRow();
+    createSongRow(true); // 추가 곡은 삭제 가능
     updateOrderNumbers();
   });
 
