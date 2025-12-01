@@ -1088,42 +1088,66 @@
     nextPageBtn.disabled = currentPageIndex === albumPages.length - 1;
 
     trackListEl.innerHTML = "";
+    
+page.tracks.forEach(track => {
+  const li = document.createElement("li");
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "track-btn";
 
-    page.tracks.forEach(track => {
-      const li = document.createElement("li");
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "track-btn";
+  const cover = document.createElement("img");
+  cover.className = "track-cover";
+  cover.src = track.cover || page.cover || "";
+  cover.alt = "";
 
-      const cover = document.createElement("img");
-      cover.className = "track-cover";
-      cover.src = track.cover || page.cover || "";
-      cover.alt = "";
+  const meta = document.createElement("div");
+  meta.className = "track-meta";
 
-      const meta = document.createElement("div");
-      meta.className = "track-meta";
+  // 곡명
+  const main = document.createElement("div");
+  main.className = "track-text-main";
 
-      const main = document.createElement("div");
-      main.className = "track-text-main";
-      main.textContent = track.title;
+  // 🔥 TITLE 뱃지 추가
+  if (track.sub && track.sub.includes("[TITLE]")) {
+    const badge = document.createElement("span");
+    badge.textContent = "TITLE";
+    badge.style.display = "inline-block";
+    badge.style.fontSize = "10px";
+    badge.style.fontWeight = "600";
+    badge.style.padding = "2px 4px";
+    badge.style.marginRight = "6px";
+    badge.style.borderRadius = "4px";
+    badge.style.background = "#e5e7eb";
+    badge.style.color = "#444";
+    main.appendChild(badge);
+  }
 
-      const sub = document.createElement("div");
-      sub.className = "track-text-sub";
-      sub.textContent = track.sub || page.title || "";
+  const titleText = document.createElement("span");
+  titleText.textContent = track.title;
+  main.appendChild(titleText);
 
-      meta.appendChild(main);
-      meta.appendChild(sub);
+  // 🔥 밑줄(앨범명) – [TITLE] 제거
+  const sub = document.createElement("div");
+  sub.className = "track-text-sub";
+  sub.textContent = track.sub.replace("[TITLE]", "").trim() || page.title;
 
-      btn.appendChild(cover);
-      btn.appendChild(meta);
+  meta.appendChild(main);
+  meta.appendChild(sub);
 
-      btn.addEventListener("click", () => {
-        if (currentSongCell) {
-          currentSongCell.textContent = track.title;
-          currentSongCell.classList.remove("empty");
-        }
-        closeSongModal();
-      });
+  btn.appendChild(cover);
+  btn.appendChild(meta);
+
+  btn.addEventListener("click", () => {
+    if (currentSongCell) {
+      currentSongCell.textContent = track.title;
+      currentSongCell.classList.remove("empty");
+    }
+    closeSongModal();
+  });
+
+  li.appendChild(btn);
+  trackListEl.appendChild(li);
+});
 
       li.appendChild(btn);
       trackListEl.appendChild(li);
@@ -1200,4 +1224,5 @@
 </script>
 </body>
 </html>
+
 
