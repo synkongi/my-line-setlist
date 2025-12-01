@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>SINK : MY LINE – Setlist Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f2f3f7;
+      color: #222;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: 0 auto 40px;
+    }
+
+    /* 상단 컨트롤 */
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .controls button {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccd0dd;
+      background: #fff;
+      font-size: 13px;
+    }
+    .controls button:hover {
+      background: #eef1f8;
+    }
+
+    .controls .spacer {
+      flex: 1;
+    }
+
+    /* 포스터 전체 영역 (여기를 캡처) */
+    .poster {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+
+    /* 헤더 영역 */
+    .poster-header {
+      padding: 28px 32px 20px;
+      background: linear-gradient(90deg, #8d9bff, #a2e6ff);
+      color: #fff;
+      position: relative;
+    }
+
+    .header-left-title-top {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .header-left-title-bottom {
+      font-size: 28px;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+
+    .header-layout {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .header-right {
+      text-align: right;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .header-right .producer-label {
+      text-transform: lowercase;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .producer-name-wrapper {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-size: 13px;
+    }
+    .producer-input {
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.8);
+      background: transparent;
+      color: #fff;
+      padding: 2px 0;
+      min-width: 140px;
+      font-size: 14px;
+      text-align: right;
+      outline: none;
+    }
+    .producer-input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* 테이블 영역 */
+    .table-wrapper {
+      padding: 0 24px 32px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      background: #e0e2ed;
+      color: #555;
+      padding: 8px 10px;
+      border-bottom: 1px solid #c0c4d4;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    tbody td {
+      border-bottom: 1px solid #f0f1f6;
+    }
+
+    .order-cell {
+      width: 52px;
+      text-align: center;
+      color: #666;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .song-cell-btn {
+      width: 100%;
+      padding: 10px 12px;
+      text-align: center;
+      font-size: 13px;
+      border-radius: 0;
+      background: #fff;
+      color: #333;
+      border: none;
+    }
+    .song-cell-btn:hover {
+      background: #f4f6fc;
+    }
+    .song-cell-btn.empty {
+      color: #c0c4d4;
+    }
+
+    .song-row:nth-child(even) .song-cell-btn {
+      background: #fafbff;
+    }
+
+    /* 멘트/VCR 행 */
+    .ment-row {
+      background: #f3f4f9;
+    }
+    .ment-row.dragging {
+      opacity: 0.6;
+    }
+    .ment-cell {
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+    .ment-label {
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .ment-delete-btn {
+      padding: 3px 8px;
+      font-size: 11px;
+      border-radius: 4px;
+      background: #dde2f2;
+      color: #445;
+    }
+    .ment-delete-btn:hover {
+      background: #c8cfea;
+    }
+
+    /* 맨 아래 크레딧 */
+    .credit {
+      padding: 6px 16px 10px;
+      font-size: 11px;
+      text-align: right;
+      color: #888;
+    }
+
+    /* 곡 선택 모달 */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      width: min(520px, 100% - 32px);
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+      padding: 12px 16px 10px;
+      border-bottom: 1px solid #eceff6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .modal-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .page-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+    }
+    .page-nav button {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 1px solid #ccd0dd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+    }
+    .page-nav button:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+    .page-indicator {
+      min-width: 56px;
+      text-align: center;
+    }
+    .modal-close {
+      font-size: 18px;
+      line-height: 1;
+      padding: 2px 4px;
+      color: #999;
+    }
+
+    .modal-body {
+      padding: 12px 16px 14px;
+      overflow-y: auto;
+    }
+    .album-header {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    .album-cover {
+      width: 84px;
+      height: 84px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #ddd;
+      flex-shrink: 0;
+    }
+    .album-meta-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .album-meta-sub {
+      font-size: 12px;
+      color: #777;
+    }
+
+    .track-list {
+      list-style: none;
+      padding: 0;
+      margin: 8px 0 0;
+    }
+    .track-list li + li {
+      border-top: 1px solid #f0f1f6;
+    }
+    .track-btn {
+      width: 100%;
+      padding: 9px 4px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+    .track-cover {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #ddd;
+      flex-shrink: 0;
+    }
+    .track-text-main {
+      font-weight: 500;
+    }
+    .track-text-sub {
+      font-size: 11px;
+      color: #888;
+      margin-top: 2px;
+    }
+    .track-meta {
+      display: flex;
+      flex-direction: column;
+    }
+    .track-btn:hover {
+      background: #f7f8fd;
+    }
+    .track-btn.direct-input {
+      justify-content: center;
+      font-weight: 600;
+      color: #444;
+    }
+
+    @media (max-width: 640px) {
+      .header-left-title-top {
+        font-size: 24px;
+      }
+      .header-left-title-bottom {
+        font-size: 20px;
+      }
+      .poster-header {
+        padding: 20px 18px 14px;
+      }
+      .table-wrapper {
+        padding: 0 14px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="controls">
+    <button id="addMentBtn" type="button">+ 멘트/VCR 행 추가</button>
+    <button id="addSongBtn" type="button">+ 곡 2개 추가 (최대 28)</button>
+    <div class="spacer"></div>
+    <button id="exportBtn" type="button">이미지 저장</button>
+  </div>
+
+  <div id="poster" class="poster">
+    <!-- 상단 타이틀 -->
+    <div class="poster-header">
+      <div class="header-layout">
+        <div>
+          <div class="header-left-title-top">SINK : MY LINE</div>
+          <div class="header-left-title-bottom">MY's Dream Concert</div>
+        </div>
+        <div class="header-right">
+          <div class="producer-label">producer</div>
+          <div class="producer-name-wrapper">
+            <input
+              id="producerName"
+              class="producer-input"
+              placeholder="your name"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 표 -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+        <tr>
+          <th style="width:52px;">순서</th>
+          <th>곡명 / 멘트·VCR</th>
+        </tr>
+        </thead>
+        <tbody id="setlistBody">
+        <!-- JS에서 기본 구조 생성 -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="credit">cr. synkongi</div>
+  </div>
+</div>
+
+<!-- 곡 선택 모달 -->
+<div id="songModal" class="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title">곡 선택</div>
+      <div class="page-nav">
+        <button id="prevPageBtn" type="button">&lt;</button>
+        <span id="pageIndicator" class="page-indicator">1 / 1</span>
+        <button id="nextPageBtn" type="button">&gt;</button>
+      </div>
+      <button id="closeModalBtn" class="modal-close" type="button">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="album-header">
+        <img id="albumCover" class="album-cover" alt="album cover" />
+        <div>
+          <div id="albumTitle" class="album-meta-title">Album Title</div>
+          <div id="albumSub" class="album-meta-sub">AESPA</div>
+        </div>
+      </div>
+      <ul id="trackList" class="track-list">
+        <!-- JS에서 채움 -->
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- html2canvas (DOM → 이미지 캡처용) -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+  // ====== 곡/앨범 데이터 (여기만 나중에 네가 채우면 됨) ======
+  // cover 경로는 GitHub repo에 올린 이미지 파일 이름으로 맞춰주면 됨.
+  const albumPages = [
+    {
+      id: "sample1",
+      title: "Girls",
+      sub: "AESPA",
+      cover: "girls.jpg", // 예시
+      tracks: [
+        { id: "girls-title", title: "Girls", sub: "Girls", cover: "girls.jpg" },
+        { id: "illusion", title: "도깨비불 (Illusion)", sub: "Girls", cover: "girls.jpg" },
+        { id: "lifestyle", title: "Life's Too Short", sub: "Girls", cover: "girls.jpg" }
+      ]
+    },
+    {
+      id: "sample2",
+      title: "Drama",
+      sub: "AESPA",
+      cover: "drama.jpg", // 예시
+      tracks: [
+        { id: "drama", title: "Drama", sub: "Drama", cover: "drama.jpg" },
+        { id: "trick-or-trick", title: "Trick or Trick", sub: "Drama", cover: "drama.jpg" },
+        { id: "licorice", title: "Licorice", sub: "Drama", cover: "drama.jpg" }
+      ]
+    }
+    // 실제 사용 시 여기 아래로 네가 가진 전체 AESPA 곡 목록/커버를 이어서 넣으면 됨.
+  ];
+
+  // ====== 기본 표 구조 생성 (26곡 + 중간 멘트/VCR 위치) ======
+  const setlistBody = document.getElementById("setlistBody");
+
+  // 멘트/VCR + 곡 행 패턴
+  // ment = 멘트/VCR 행, song = 곡 행
+  const basePattern = [
+    "ment",
+    "song","song","song",
+    "ment",
+    "song","song","song",
+    "ment",
+    "song","song","song","song",
+    "ment",
+    "song","song","song",
+    "ment",
+    "song","song","song",
+    "ment",
+    "song","song","song","song",
+    "ment",
+    "song","song","song"
+  ];
+  // song이 26개인지 확인용 (필요하면 여기 찍어볼 수 있음)
+  // console.log(basePattern.filter(t => t === "song").length);
+
+  let draggedMentRow = null;
+  let currentSongCell = null;
+  let currentPageIndex = 0;
+
+  function updateOrderNumbers() {
+    const rows = setlistBody.querySelectorAll("tr");
+    let num = 1;
+    rows.forEach(row => {
+      const orderCell = row.querySelector(".order-cell");
+      if (!orderCell) return;
+      if (row.classList.contains("song-row")) {
+        orderCell.textContent = num;
+        num += 1;
+      } else {
+        orderCell.textContent = ""; // 멘트/VCR 행은 번호 없음
+      }
+    });
+  }
+
+  function createSongRow() {
+    const tr = document.createElement("tr");
+    tr.classList.add("song-row");
+
+    const tdOrder = document.createElement("td");
+    tdOrder.className = "order-cell";
+
+    const tdTitle = document.createElement("td");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "song-cell-btn empty";
+    btn.textContent = "곡 선택";
+    btn.addEventListener("click", () => openSongModal(btn));
+
+    tdTitle.appendChild(btn);
+    tr.appendChild(tdOrder);
+    tr.appendChild(tdTitle);
+    setlistBody.appendChild(tr);
+  }
+
+  function attachMentRowDragEvents(row) {
+    row.addEventListener("dragstart", () => {
+      draggedMentRow = row;
+      row.classList.add("dragging");
+    });
+    row.addEventListener("dragend", () => {
+      if (draggedMentRow === row) draggedMentRow = null;
+      row.classList.remove("dragging");
+    });
+  }
+
+  function createMentRow() {
+    const tr = document.createElement("tr");
+    tr.classList.add("ment-row");
+    tr.setAttribute("draggable", "true");
+
+    const tdOrder = document.createElement("td");
+    tdOrder.className = "order-cell";
+
+    const tdMain = document.createElement("td");
+    tdMain.className = "ment-cell";
+
+    const label = document.createElement("span");
+    label.className = "ment-label";
+    label.textContent = "멘트 / VCR";
+
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.className = "ment-delete-btn";
+    delBtn.textContent = "삭제";
+    delBtn.addEventListener("click", () => {
+      tr.remove();
+      updateOrderNumbers();
+    });
+
+    tdMain.appendChild(label);
+    tdMain.appendChild(delBtn);
+
+    tr.appendChild(tdOrder);
+    tr.appendChild(tdMain);
+
+    attachMentRowDragEvents(tr);
+    setlistBody.appendChild(tr);
+  }
+
+  function buildBaseTable() {
+    basePattern.forEach(type => {
+      if (type === "song") {
+        createSongRow();
+      } else {
+        createMentRow();
+      }
+    });
+    updateOrderNumbers();
+  }
+
+  // 드래그 이동 (멘트/VCR 행만)
+  function getRowAfterY(y) {
+    const rows = Array.from(setlistBody.querySelectorAll("tr")).filter(
+      row => row !== draggedMentRow
+    );
+    let closest = null;
+    for (const row of rows) {
+      const box = row.getBoundingClientRect();
+      const offset = y - (box.top + box.height / 2);
+      if (offset < 0 && (!closest || offset > closest.offset)) {
+        closest = { offset, row };
+      }
+    }
+    return closest ? closest.row : null;
+  }
+
+  setlistBody.addEventListener("dragover", (e) => {
+    if (!draggedMentRow) return;
+    e.preventDefault();
+    const afterRow = getRowAfterY(e.clientY);
+    if (!afterRow) {
+      setlistBody.appendChild(draggedMentRow);
+    } else {
+      setlistBody.insertBefore(draggedMentRow, afterRow);
+    }
+  });
+
+  // ====== 곡 선택 모달 ======
+  const songModal = document.getElementById("songModal");
+  const albumCoverEl = document.getElementById("albumCover");
+  const albumTitleEl = document.getElementById("albumTitle");
+  const albumSubEl = document.getElementById("albumSub");
+  const trackListEl = document.getElementById("trackList");
+  const pageIndicatorEl = document.getElementById("pageIndicator");
+  const prevPageBtn = document.getElementById("prevPageBtn");
+  const nextPageBtn = document.getElementById("nextPageBtn");
+
+  function renderAlbumPage() {
+    const page = albumPages[currentPageIndex];
+    if (!page) return;
+
+    albumCoverEl.src = page.cover || "";
+    albumTitleEl.textContent = page.title || "";
+    albumSubEl.textContent = page.sub || "";
+    pageIndicatorEl.textContent = (currentPageIndex + 1) + " / " + albumPages.length;
+
+    prevPageBtn.disabled = currentPageIndex === 0;
+    nextPageBtn.disabled = currentPageIndex === albumPages.length - 1;
+
+    trackListEl.innerHTML = "";
+
+    page.tracks.forEach(track => {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "track-btn";
+
+      const cover = document.createElement("img");
+      cover.className = "track-cover";
+      cover.src = track.cover || page.cover || "";
+      cover.alt = "";
+
+      const meta = document.createElement("div");
+      meta.className = "track-meta";
+
+      const main = document.createElement("div");
+      main.className = "track-text-main";
+      main.textContent = track.title;
+
+      const sub = document.createElement("div");
+      sub.className = "track-text-sub";
+      sub.textContent = track.sub || page.title || "";
+
+      meta.appendChild(main);
+      meta.appendChild(sub);
+
+      btn.appendChild(cover);
+      btn.appendChild(meta);
+
+      btn.addEventListener("click", () => {
+        if (currentSongCell) {
+          currentSongCell.textContent = track.title;
+          currentSongCell.classList.remove("empty");
+        }
+        closeSongModal();
+      });
+
+      li.appendChild(btn);
+      trackListEl.appendChild(li);
+    });
+
+    // [직접 입력] 항목
+    const liDirect = document.createElement("li");
+    const directBtn = document.createElement("button");
+    directBtn.type = "button";
+    directBtn.className = "track-btn direct-input";
+    directBtn.textContent = "[직접 입력]";
+    directBtn.addEventListener("click", () => {
+      const title = window.prompt("곡명을 직접 입력하세요.");
+      if (title && currentSongCell) {
+        currentSongCell.textContent = title;
+        currentSongCell.classList.remove("empty");
+      }
+      closeSongModal();
+    });
+    liDirect.appendChild(directBtn);
+    trackListEl.appendChild(liDirect);
+  }
+
+  function openSongModal(cellEl) {
+    currentSongCell = cellEl;
+    if (!albumPages.length) {
+      alert("albumPages 데이터부터 채워야 곡 선택이 가능해.");
+      return;
+    }
+    currentPageIndex = 0;
+    renderAlbumPage();
+    songModal.classList.add("open");
+  }
+
+  function closeSongModal() {
+    songModal.classList.remove("open");
+    currentSongCell = null;
+  }
+
+  document.getElementById("closeModalBtn").addEventListener("click", closeSongModal);
+  songModal.addEventListener("click", (e) => {
+    if (e.target === songModal) closeSongModal();
+  });
+  prevPageBtn.addEventListener("click", () => {
+    if (currentPageIndex > 0) {
+      currentPageIndex -= 1;
+      renderAlbumPage();
+    }
+  });
+  nextPageBtn.addEventListener("click", () => {
+    if (currentPageIndex < albumPages.length - 1) {
+      currentPageIndex += 1;
+      renderAlbumPage();
+    }
+  });
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && songModal.classList.contains("open")) {
+      closeSongModal();
+    }
+  });
+
+  // ====== 버튼들 기능 ======
+  document.getElementById("addMentBtn").addEventListener("click", () => {
+    createMentRow();
+    updateOrderNumbers();
+  });
+
+  function countSongRows() {
+    return setlistBody.querySelectorAll(".song-row").length;
+  }
+
+  document.getElementById("addSongBtn").addEventListener("click", () => {
+    const maxSongs = 28;
+    const current = countSongRows();
+    const remain = maxSongs - current;
+    if (remain <= 0) {
+      alert("최대 28곡까지 추가할 수 있어.");
+      return;
+    }
+    const toAdd = Math.min(2, remain);
+    for (let i = 0; i < toAdd; i++) {
+      createSongRow();
+    }
+    updateOrderNumbers();
+  });
+
+  document.getElementById("exportBtn").addEventListener("click", () => {
+    const posterEl = document.getElementById("poster");
+    html2canvas(posterEl, { scale: 2 }).then(canvas => {
+      const link = document.createElement("a");
+      link.download = "setlist.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+  });
+
+  // 초기 표 생성
+  buildBaseTable();
+  attachMentRowDragEvents; // (호출용이 아니라, 함수 정의만 있으면 됨)
+</script>
+</body>
+</html>
